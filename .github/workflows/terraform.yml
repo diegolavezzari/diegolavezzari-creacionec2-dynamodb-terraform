@@ -10,6 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.3.0" # Especifica la versión que         
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
