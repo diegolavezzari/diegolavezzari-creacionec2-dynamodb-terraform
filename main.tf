@@ -21,7 +21,7 @@ resource "aws_instance" "app_server" {
   instance_type = "t3.micro"
   subnet_id     = "subnet-0167d706fb101e2ae"
   tags = {
-    Name = "ec2-dynamodb"
+    Name = var.instance_name
   }
 
   depends_on = [null_resource.wait_for_table]
