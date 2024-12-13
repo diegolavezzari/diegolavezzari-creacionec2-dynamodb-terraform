@@ -34,9 +34,10 @@ jobs:
           terraform init -backend=false  # Desactiva el backend mientras se crea DynamoDB
           terraform apply -target=aws_dynamodb_table.terraform_state_lock -auto-approve
 
-      # Luego configura el backend S3 y DynamoDB
+      # Luego reconfigura el backend con S3 y DynamoDB
       - name: Initialize Terraform with backend
-        run: terraform init  # Ahora inicializa con el backend S3 y DynamoDB
+        run: |
+          terraform init -reconfigure  # Reconfigura el backend con la nueva configuración
 
       - name: Validate Terraform
         run: terraform validate
