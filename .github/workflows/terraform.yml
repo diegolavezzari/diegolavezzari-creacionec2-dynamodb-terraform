@@ -13,7 +13,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.3.0" # Especifica la versión que         
+          terraform_version: "1.3.0"  # Especifica la versión de Terraform que deseas usar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -34,10 +34,16 @@ jobs:
       - name: Validate Terraform
         run: terraform validate
 
-      - name: Plan Terraform
+      - name: Plan Terraform (Crear DynamoDB)
+        run: terraform plan -target=aws_dynamodb_table.terraform_state_lock
+
+      - name: Apply Terraform (Crear DynamoDB)
+        run: terraform apply -target=aws_dynamodb_table.terraform_state_lock -auto-approve
+
+      - name: Plan Terraform (Crear EC2)
         run: terraform plan -var="instance_name=${{ secrets.INSTANCE_NAME }}"
 
-      - name: Apply Terraform
+      - name: Apply Terraform (Crear EC2)
         run: terraform apply -var="instance_name=${{ secrets.INSTANCE_NAME }}" -auto-approve
 
       - name: Output instance information
