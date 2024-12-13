@@ -14,11 +14,12 @@ resource "aws_dynamodb_table" "terraform_lock_table" {
 }
 
 # Crear la instancia EC2 que depende de DynamoDB
-resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Reemplaza con tu ID de AMI
-  instance_type = "t2.micro"
+resource "aws_instance" "app_server" {
+  ami           = "ami-0453ec754f44f9a4a"  # Reemplaza con tu ID de AMI
+  instance_type = "t3.micro"
+  subnet_id     = "subnet-0167d706fb101e2ae"
   tags = {
-    Name = "MyInstance"
+    Name = "ec2-dynamodb"
   }
 
   # Asegurarse de que la EC2 se cree después de la tabla DynamoDB
