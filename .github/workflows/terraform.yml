@@ -31,7 +31,7 @@ jobs:
         run: terraform validate
 
       - name: Plan Terraform
-        run: terraform plan -var="instance_name=ec2-dynamodb
+        run: terraform plan -var="instance_name=ec2-dynamodb"
 
       - name: Apply Terraform
         run: terraform apply -var="instance_name=${{ secrets.INSTANCE_NAME }}" -auto-approve
