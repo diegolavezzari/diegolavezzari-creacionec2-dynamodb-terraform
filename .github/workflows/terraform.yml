@@ -13,7 +13,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.3.0"  # Especifica la versión de Terraform que deseas usar
+          terraform_version: "1.3.0"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -28,17 +28,18 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         shell: bash
 
-      - name: Initialize Terraform
-        run: terraform init
+      # Primero crea DynamoDB
+      - name: Initialize Terraform for DynamoDB
+        run: |
+          terraform init -backend=false  # Desactiva el backend mientras se crea DynamoDB
+          terraform apply -target=aws_dynamodb_table.terraform_state_lock -auto-approve
+
+      # Luego configura el backend S3 y DynamoDB
+      - name: Initialize Terraform with backend
+        run: terraform init  # Ahora inicializa con el backend S3 y DynamoDB
 
       - name: Validate Terraform
         run: terraform validate
-
-      - name: Plan Terraform (Crear DynamoDB)
-        run: terraform plan -target=aws_dynamodb_table.terraform_state_lock
-
-      - name: Apply Terraform (Crear DynamoDB)
-        run: terraform apply -target=aws_dynamodb_table.terraform_state_lock -auto-approve
 
       - name: Plan Terraform (Crear EC2)
         run: terraform plan -var="instance_name=${{ secrets.INSTANCE_NAME }}"
