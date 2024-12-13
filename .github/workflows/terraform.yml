@@ -28,17 +28,18 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         shell: bash
 
-      # Primero crea DynamoDB
-      - name: Initialize Terraform for DynamoDB
+      # Primero crea DynamoDB sin el backend activado
+      - name: Initialize Terraform (without backend)
         run: |
           terraform init -backend=false  # Desactiva el backend mientras se crea DynamoDB
           terraform apply -target=aws_dynamodb_table.terraform_state_lock -auto-approve
 
-      # Luego reconfigura el backend con S3 y DynamoDB
+      # Luego, reconfigura el backend de S3 y DynamoDB
       - name: Initialize Terraform with backend
         run: |
-          terraform init -reconfigure  # Reconfigura el backend con la nueva configuración
+          terraform init -reconfigure  # Vuelve a configurar el backend S3/DynamoDB
 
+      # Ahora, valida y aplica los cambios con el backend configurado
       - name: Validate Terraform
         run: terraform validate
 
@@ -50,3 +51,4 @@ jobs:
 
       - name: Output instance information
         run: terraform output
+
