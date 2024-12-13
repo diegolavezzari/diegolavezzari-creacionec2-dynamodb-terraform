@@ -1,14 +1,8 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.72.1"
-    }
-  }
-
-  required_version = ">= 0.14.9"
+provider "aws" {
+  region = "us-east-1"
 }
 
+# Crear la tabla DynamoDB
 resource "aws_dynamodb_table" "terraform_lock_table" {
   name           = "terraform-lock-table"
   billing_mode   = "PAY_PER_REQUEST"
@@ -19,12 +13,14 @@ resource "aws_dynamodb_table" "terraform_lock_table" {
   }
 }
 
-resource "aws_instance" "app_server" {
-  ami           = "ami-0453ec754f44f9a4a"
-  instance_type = "t3.micro"
-  subnet_id     = "subnet-0167d706fb101e2ae"
-
+# Crear la instancia EC2 que depende de DynamoDB
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Reemplaza con tu ID de AMI
+  instance_type = "t2.micro"
   tags = {
-    Name = var.instance_name
+    Name = "MyInstance"
   }
+
+  # Asegurarse de que la EC2 se cree después de la tabla DynamoDB
+  depends_on = [aws_dynamodb_table.terraform_lock_table]
 }
