@@ -3,7 +3,9 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket        = var.aws_s3_bucket
+  bucket = var.aws_s3_bucket
+
+  region = var.region
 
   tags = {
     Name = "TerraformStateBucket"

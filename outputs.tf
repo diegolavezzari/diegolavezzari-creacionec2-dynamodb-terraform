@@ -15,6 +15,6 @@ output "dynamodb_table" {
 
 output "aws_s3_bucket" {
   description = "Nombre-S3"
-  value = aws_s3_bucket.terraform_state
-  
+  value       = aws_s3_bucket.terraform_state
+
 }

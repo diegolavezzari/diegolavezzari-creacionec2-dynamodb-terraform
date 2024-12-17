@@ -6,12 +6,12 @@ variable "ec2_dynamodb" {
 
 variable "aws_s3_bucket" {
   description = "terraform-backup"
-  type = string
-  default = "value"  
+  type        = string
+  default     = "value"
 }
 
 variable "region" {
   description = "Region aws para ec2 con dynamodb"
-  type = string
-  default = "us-east-1"  
+  type        = string
+  default     = "us-east-1"
 }
